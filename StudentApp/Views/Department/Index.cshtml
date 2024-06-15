@@ -1,0 +1,57 @@
+﻿@model List<Department>
+@{
+    ViewData["Title"] = "Home Page";
+    var departments = Model;
+    var departmentSelected = ViewBag.Department ?? departments[0];
+    @* var flag = departmentSelected != null ? true : false; *@
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome Department</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <form action="">
+        <div class="row">
+            <div class="mb-3 col-10">
+                <select class="form-select" aria-label="Default select example" id="DepartmentId" name="DepartmentId">
+                    @foreach (var department in departments)
+                    {
+                        if (departmentSelected.Id == department.Id)
+                        {
+                            <option selected value=@department.Id>@department.Name</option>
+                        }
+                        else
+                        {
+                            <option value=@department.Id>@department.Name</option>
+                        }
+                    }
+                    }
+                </select>
+            </div>
+
+            <div class="col-2">
+                <button class="btn btn-primary" type="submit">Get</button>
+            </div>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Department Name</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var department in departments)
+            {
+                <tr>
+                    <th>@department.Name</th>
+                    <td>
+                        <a class="btn btn-primary" href="/Department/Detail?id=@department.Id" role="button">Detail</a>
+                        <a class="btn btn-primary" href="/Department/Delete?id=@department.Id" role="button">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

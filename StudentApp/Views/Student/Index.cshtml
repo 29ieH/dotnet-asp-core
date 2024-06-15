@@ -1,0 +1,83 @@
+﻿@model List<Student>;
+@{
+    ViewData["Title"] = "Student Page";
+    var students = Model;
+    var departments = ViewBag.Departments;
+    var keySearchTxt = Context.Request.Query["KeySearch"].ToString();
+    var idDepartmentStr = Context.Request.Query["DepartmentId"].ToString();
+    int? idDepartmentSelected = null;
+    if (!string.IsNullOrEmpty(idDepartmentStr))
+    {
+        if (int.TryParse(idDepartmentStr, out int parsedDepartmentId))
+        {
+            idDepartmentSelected = parsedDepartmentId;
+        }
+    }
+    var flag = idDepartmentSelected != null ? true : false;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Add Student</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <form action="">
+        <div class="row mb-5">
+            <div class="col-8">
+                <input type="text" class="form-control" id="key" name="KeySearch" value="@keySearchTxt" required"
+                    placeholder="Enter keysearch">
+            </div>
+            <div class="col-2">
+                <select class="form-select" aria-label="Default select example" name="DepartmentId" id="DepartmentId">
+                    <option value="">All</option>
+                    @foreach (var department in departments)
+                    {
+                        @if (flag)
+                        {
+                            @if (idDepartmentSelected == department.Id)
+                            {
+                                <option selected value=@department.Id>@department.Name</option>
+                            }
+                            else
+                            {
+                                <option value=@department.Id>@department.Name</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value=@department.Id>@department.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-2">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Code</th>
+                <th scope="col">Name</th>
+                <th scope="col">BirthDay</th>
+                <th scope="col">Address</th>
+                <th scope="col">Department</th>
+                <th scope="col"><a class="btn btn-primary" href="/Student/Create">Add Student</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in students)
+            {
+                <tr>
+                    <th scope="row">@student.Code</th>
+                    <td>@student.Name</td>
+                    <td>@student.Birthday</td>
+                    <td>@student.Address</td>
+                    <td>@(student.Department != null ? student.Department.Name : "")</td>
+                    <td><a class="btn btn-info" href="/Student/Update?Id=@student.Id">Save Student</a> <a
+                            class="btn btn-danger" onclick="return confirm('Do you want delete')"
+                            href="/Student/Delete?Id=@student.Id">Delete Student</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
